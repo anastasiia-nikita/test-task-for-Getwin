@@ -1,0 +1,21 @@
+.pokemons {
+  &__block {
+    display: flex;
+    justify-content: stretch;
+    align-content: stretch;
+  }
+
+  &__sidebar {
+    // @extend %stretch-panel;
+
+    flex-basis: 30%;
+    border-color: blue;
+  }
+
+  &__content {
+    // @extend %stretch-panel;
+
+    flex-basis: 100%;
+    border-color: green;
+  }
+}
