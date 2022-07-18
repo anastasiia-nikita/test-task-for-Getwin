@@ -1,5 +1,5 @@
 import React from 'react';
-// import classnames from 'classnames';
+import classnames from 'classnames';
 import './PokemonCard.scss';
 import { useDispatch, useSelector } from 'react-redux';
 // eslint-disable-next-line import/extensions, import/no-unresolved
@@ -25,23 +25,34 @@ export const PokemonCard: React.FC<Props> = ({ pokemon }) => {
   };
 
   return (
-    <div className="car-card col-sm-6 col-md-4 col-xl-3">
-      <div className="card border-white shadow">
-        <img src={pokemon.photo} className="card-img-top" alt="photo112" />
-        <div className="car-card__body card-body">
-          <h5 className="car-card__title card-title">{pokemon.name}</h5>
+    <div className="col-sm-6 col-md-4 col-xl-3">
+      <div className="card border-black shadow">
+        <img src={pokemon.photo} className="card__image" alt={pokemon.name} />
+        <div className="card-body">
+          <h5 className="card__title card-title">{pokemon.name}</h5>
 
-          {pokemon.types.map((type => (
-            <button type="button" key={type.url}>{type.name}</button>
-          )))}
+          <div className="text-center mb-3">
+            <span className="me-2">Types:</span>
+            {pokemon.types.map((type => (
+              <button
+                type="button"
+                className="btn btn-outline-secondary me-3"
+                key={type.url}
+              >
+                {type.name}
+              </button>
+            )))}
+          </div>
 
-          <div>
+          <div className="text-center">
             <button
               type="button"
-              className="btn btn-primary"
+              className={classnames('btn', 'btn-primary', {
+                'btn-danger': selectedPokemon?.name === pokemon.name,
+              })}
               onClick={() => selectPokemon(pokemon)}
             >
-              Show more
+              {selectedPokemon?.name !== pokemon.name ? 'Open details' : 'Close details'}
             </button>
           </div>
         </div>

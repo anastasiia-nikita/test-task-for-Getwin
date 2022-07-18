@@ -6,16 +6,11 @@
   }
 
   &__sidebar {
-    // @extend %stretch-panel;
-
+    padding-top: 120px;
     flex-basis: 30%;
-    border-color: blue;
   }
 
   &__content {
-    // @extend %stretch-panel;
-
     flex-basis: 100%;
-    border-color: green;
   }
 }

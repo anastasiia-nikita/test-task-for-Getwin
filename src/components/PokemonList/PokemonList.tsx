@@ -4,7 +4,7 @@ import './PokemonList.scss';
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { Type } from '../../react-app-env';
 import { getPockemonsType } from '../../api';
-import { getFetchPokemonByURL, getNextfetchPokemonByURL } from '../../store/actions';
+import { getFetchPokemonByURL } from '../../store/actions';
 import { getVisiblePokemons, getSelectedPokemonSelector } from '../../store/selectors';
 import { TypedDispatch } from '../../store/index';
 // eslint-disable-next-line import/named
@@ -17,7 +17,9 @@ export const PokemonList: React.FC = () => {
   //   .then(pokemonsFromServer => console.log(pokemonsFromServer.results));
 
   const dispatch: TypedDispatch = useDispatch();
-  const [offset, setOffset] = useState(20);
+  const [offset,
+    setOffset,
+  ] = useState(0);
   const [query, setQuery] = useState('');
   const [types, setTypes] = useState<Type[]>([]);
   const [selectedType, setSelectedType] = useState('');
@@ -25,7 +27,7 @@ export const PokemonList: React.FC = () => {
   const selectedPokemon = useSelector(getSelectedPokemonSelector);
 
   useEffect(() => {
-    dispatch(getFetchPokemonByURL());
+    dispatch(getFetchPokemonByURL(offset));
 
     getPockemonsType()
       .then(typesFromServer => setTypes(typesFromServer.results));
@@ -40,55 +42,64 @@ export const PokemonList: React.FC = () => {
   // const API = 'https://pokeapi.co/api/v2/pokemon';
   // const pokemons = useSelector(getPokemonsSelector);
 
-  // getPockemons('https://pokeapi.co/api/v2/pokemon/132')
+  // getPockemons('https://pokeapi.co/api/v2/pokemon')
   //   // eslint-disable-next-line no-console
   //   .then(pokemonsFromServer => console.log(pokemonsFromServer));
 
   // const infoAbout = await axios.get(pokemon.url);
 
-  const getNewPokemons = (offsets: number) => {
-    if (offsets < 1155) {
-      dispatch(getNextfetchPokemonByURL(offsets));
+  const getNextPokemons = (offsets: number) => {
+    const newOffset = offsets + 20;
+    // const newOffset = offsets + 20;
 
-      setOffset(offsets + 20);
-    }
+    dispatch(getFetchPokemonByURL(newOffset));
+    setOffset(newOffset);
   };
 
-  const getPrevPokemons = async (offsets: number) => {
-    if (offsets - 20 > 0) {
-      const newOffset = offsets - 40;
+  const getPrevPokemons = (offsets: number) => {
+    const newOffset = offsets - 20;
+    // setOffset(offsets - 40);
 
-      dispatch(getNextfetchPokemonByURL(newOffset));
-      setOffset(newOffset + 20);
-    }
+    dispatch(getFetchPokemonByURL(newOffset));
+    setOffset(newOffset);
   };
+
+  // eslint-disable-next-line no-console
+  console.log(offset);
 
   return (
     <div className="pokemons">
       <div className="pokemons__block">
         <div className="pokemons__content container">
-          <button
-            type="button"
-            onClick={() => {
-              getPrevPokemons(offset);
-            }}
-          >
-            Previous page
-          </button>
+          <div className="text-center m-3">
+            <img src="./images/pokeapi_256.png" alt="logo" />
+          </div>
+          <div className="text-center m-5">
+            <button
+              type="button"
+              className="btn btn-primary me-4"
+              onClick={() => {
+                getPrevPokemons(offset);
+              }}
+            >
+              Previous page
+            </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              getNewPokemons(offset);
-            }}
-          >
-            Next page
-          </button>
+            <button
+              type="button"
+              className="btn btn-warning"
+              onClick={() => {
+                getNextPokemons(offset);
+              }}
+            >
+              Next page
+            </button>
+          </div>
 
           <div>
             <input
               type="text"
-              className="form-control"
+              className="form-control mb-2"
               placeholder="Search Pokemon"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -96,11 +107,11 @@ export const PokemonList: React.FC = () => {
           </div>
 
           <select
-            className="form-select"
+            className="form-select mb-4"
             value={selectedType}
             onChange={(event) => setSelectedType(event.target.value)}
           >
-            <option disabled value="">Choose Pokemon type</option>
+            <option value="">Choose Pokemon type</option>
             {types.map(type => (
               <option key={type.name} value={type.name}>{type.name}</option>
             ))}
@@ -115,7 +126,7 @@ export const PokemonList: React.FC = () => {
 
         {selectedPokemon !== null && (
           <div className="pokemons__sidebar">
-            <PokemonInfo pokemonInfo={selectedPokemon.info} />
+            <PokemonInfo />
           </div>
         )}
       </div>

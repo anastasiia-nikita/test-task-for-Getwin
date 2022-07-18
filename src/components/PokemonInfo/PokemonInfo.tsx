@@ -1,28 +1,29 @@
 import React from 'react';
 import './PokemonInfo.scss';
-// eslint-disable-next-line import/extensions, import/no-unresolved
-import { Info } from '../../react-app-env';
+import { useSelector } from 'react-redux';
+import { getSelectedPokemonSelector } from '../../store/selectors';
 
-interface Props {
-  pokemonInfo: Info,
-}
+export const PokemonInfo: React.FC = () => {
+  const selectedPokemon = useSelector(getSelectedPokemonSelector);
 
-export const PokemonInfo: React.FC<Props> = ({ pokemonInfo }) => {
   return (
-    <div className="container">
-      <h2 className="text-centered">Pokemon details:</h2>
+    <div className="container info">
+      <h2 className="text-primary text-center">{`Pokemon details: ${selectedPokemon?.name}`}</h2>
+      <div className="text-center">
+        <img src={selectedPokemon?.photo} alt={selectedPokemon?.name} />
+      </div>
 
       <div className="accordion">
         <div className="accordion-item">
           <h2 className="accordion-header" id="headingOne">
             <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              <strong>Stats:</strong>
+              <strong>Types:</strong>
             </button>
           </h2>
           <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
             <div className="accordion-body">
-              {pokemonInfo.stats.map(stat => (
-                <p key={stat.stat.url}>{`${stat.stat.name} - ${stat.base_stat}`}</p>
+              {selectedPokemon?.types.map(type => (
+                <p key={type.url}>{type.name}</p>
               ))}
             </div>
           </div>
@@ -31,12 +32,27 @@ export const PokemonInfo: React.FC<Props> = ({ pokemonInfo }) => {
         <div className="accordion-item">
           <h2 className="accordion-header" id="headingTwo">
             <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-              <strong>Moves:</strong>
+              <strong>Stats:</strong>
             </button>
           </h2>
           <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
             <div className="accordion-body">
-              {pokemonInfo.moves.map(move => (
+              {selectedPokemon?.info.stats.map(stat => (
+                <p key={stat.stat.url}>{`${stat.stat.name} - ${stat.base_stat}`}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="accordion-item">
+          <h2 className="accordion-header" id="headingThree">
+            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+              <strong>Moves:</strong>
+            </button>
+          </h2>
+          <div id="collapseThree" className="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+            <div className="accordion-body">
+              {selectedPokemon?.info.moves.map(move => (
                 <p key={move.move.url}>{move.move.name}</p>
               ))}
             </div>

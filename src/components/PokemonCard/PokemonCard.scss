@@ -1,5 +1,13 @@
-.card-img-top {
-  width: max-content;
-  object-fit: cover;
-  object-position: center;
+.card {
+  &__image {
+    width: max-content;
+    margin: 0 auto;
+    padding-top: 10px;
+  }
+
+  &__title {
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
+  }
 }
