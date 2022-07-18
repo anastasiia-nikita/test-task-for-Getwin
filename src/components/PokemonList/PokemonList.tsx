@@ -34,23 +34,17 @@ export const PokemonList: React.FC = () => {
       .catch(error => {
         throw new Error(`${error}`);
       });
-  }, []);
+  }, [offset]);
 
   const getNextPokemons = useCallback((offsets: number) => {
     if (offsets <= countAllPokemons) {
-      const newOffset = offsets + 20;
-
-      dispatch(getFetchPokemonByURL(newOffset));
-      setOffset(newOffset);
+      setOffset(offsets + 20);
     }
   }, [offset]);
 
   const getPrevPokemons = useCallback((offsets: number) => {
     if (offsets - 20 >= 0) {
-      const newOffset = offsets - 20;
-
-      dispatch(getFetchPokemonByURL(newOffset));
-      setOffset(newOffset);
+      setOffset(offsets - 20);
     }
   }, [offset]);
 
