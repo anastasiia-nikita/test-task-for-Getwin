@@ -1,71 +1,58 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './PokemonList.scss';
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { Type } from '../../react-app-env';
-import { getPockemonsType } from '../../api';
+import { getPockemonsType, getPockemonsCount } from '../../api';
 import { getFetchPokemonByURL } from '../../store/actions';
-import { getVisiblePokemons, getSelectedPokemonSelector } from '../../store/selectors';
+import { getVisiblePokemons, getSelectedPokemon } from '../../store/selectors';
 import { TypedDispatch } from '../../store/index';
-// eslint-disable-next-line import/named
 import { PokemonCard } from '../PokemonCard';
 import { PokemonInfo } from '../PokemonInfo';
 
 export const PokemonList: React.FC = () => {
-  // getPockemonsInfo('https://pokeapi.co/api/v2/type/')
-  // // eslint-disable-next-line no-console
-  //   .then(pokemonsFromServer => console.log(pokemonsFromServer.results));
-
   const dispatch: TypedDispatch = useDispatch();
-  const [offset,
-    setOffset,
-  ] = useState(0);
+  const [offset, setOffset] = useState(0);
   const [query, setQuery] = useState('');
   const [types, setTypes] = useState<Type[]>([]);
   const [selectedType, setSelectedType] = useState('');
+  const [countAllPokemons, setCountAllPokemons] = useState(0);
   const pokemons = useSelector(getVisiblePokemons(query, selectedType));
-  const selectedPokemon = useSelector(getSelectedPokemonSelector);
+  const selectedPokemon = useSelector(getSelectedPokemon);
 
   useEffect(() => {
     dispatch(getFetchPokemonByURL(offset));
 
     getPockemonsType()
-      .then(typesFromServer => setTypes(typesFromServer.results));
+      .then(typesFromServer => setTypes(typesFromServer.results))
+      .catch(error => {
+        throw new Error(`${error}`);
+      });
+
+    getPockemonsCount()
+      .then(countFromServer => setCountAllPokemons(countFromServer.count))
+      .catch(error => {
+        throw new Error(`${error}`);
+      });
   }, []);
 
-  // eslint-disable-next-line no-console
-  console.log(pokemons);
+  const getNextPokemons = useCallback((offsets: number) => {
+    if (offsets <= countAllPokemons) {
+      const newOffset = offsets + 20;
 
-  // eslint-disable-next-line no-console
-  console.log(selectedPokemon);
+      dispatch(getFetchPokemonByURL(newOffset));
+      setOffset(newOffset);
+    }
+  }, [offset]);
 
-  // const API = 'https://pokeapi.co/api/v2/pokemon';
-  // const pokemons = useSelector(getPokemonsSelector);
+  const getPrevPokemons = useCallback((offsets: number) => {
+    if (offsets - 20 >= 0) {
+      const newOffset = offsets - 20;
 
-  // getPockemons('https://pokeapi.co/api/v2/pokemon')
-  //   // eslint-disable-next-line no-console
-  //   .then(pokemonsFromServer => console.log(pokemonsFromServer));
-
-  // const infoAbout = await axios.get(pokemon.url);
-
-  const getNextPokemons = (offsets: number) => {
-    const newOffset = offsets + 20;
-    // const newOffset = offsets + 20;
-
-    dispatch(getFetchPokemonByURL(newOffset));
-    setOffset(newOffset);
-  };
-
-  const getPrevPokemons = (offsets: number) => {
-    const newOffset = offsets - 20;
-    // setOffset(offsets - 40);
-
-    dispatch(getFetchPokemonByURL(newOffset));
-    setOffset(newOffset);
-  };
-
-  // eslint-disable-next-line no-console
-  console.log(offset);
+      dispatch(getFetchPokemonByURL(newOffset));
+      setOffset(newOffset);
+    }
+  }, [offset]);
 
   return (
     <div className="pokemons">
@@ -77,6 +64,7 @@ export const PokemonList: React.FC = () => {
           <div className="text-center m-5">
             <button
               type="button"
+              disabled={offset === 0}
               className="btn btn-warning me-4"
               onClick={() => {
                 getPrevPokemons(offset);
@@ -87,6 +75,7 @@ export const PokemonList: React.FC = () => {
 
             <button
               type="button"
+              disabled={offset === countAllPokemons}
               className="btn btn-primary"
               onClick={() => {
                 getNextPokemons(offset);

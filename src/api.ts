@@ -1,19 +1,16 @@
 import axios from 'axios';
 
-// export const getPockemons = async (url:string) => {
-//   const response = await axios.get(url);
+const TYPE_URL = 'https://pokeapi.co/api/v2/type/';
+const COUNT_URL = 'https://pokeapi.co/api/v2/pokemon';
 
-//   return response.data;
-// };
+export const getPockemonsCount = async () => {
+  const response = await axios.get(COUNT_URL);
 
-// export const getPockemonsInfo = async (url:string) => {
-//   const response = await axios.get(url);
-
-//   return response.data;
-// };
+  return response.data;
+};
 
 export const getPockemonsType = async () => {
-  const response = await axios.get('https://pokeapi.co/api/v2/type/');
+  const response = await axios.get(TYPE_URL);
 
   return response.data;
 };

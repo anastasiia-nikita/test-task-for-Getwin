@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import classnames from 'classnames';
 import './PokemonCard.scss';
 import { useDispatch, useSelector } from 'react-redux';
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { Pokemon } from '../../react-app-env';
 import { SetSelectedPokemonAction } from '../../store/actions';
-import { getSelectedPokemonSelector } from '../../store/selectors';
+import { getSelectedPokemon } from '../../store/selectors';
 import { TypedDispatch } from '../../store/index';
 
 interface Props {
@@ -14,15 +14,15 @@ interface Props {
 
 export const PokemonCard: React.FC<Props> = ({ pokemon }) => {
   const dispatch: TypedDispatch = useDispatch();
-  const selectedPokemon = useSelector(getSelectedPokemonSelector);
+  const selectedPokemon = useSelector(getSelectedPokemon);
 
-  const selectPokemon = (currentPokemon: Pokemon) => {
+  const selectPokemon = useCallback((currentPokemon: Pokemon) => {
     if (selectedPokemon?.name !== currentPokemon.name) {
       dispatch(SetSelectedPokemonAction(currentPokemon));
     } else {
       dispatch(SetSelectedPokemonAction(null));
     }
-  };
+  }, [selectedPokemon]);
 
   return (
     <div className="col-sm-6 col-md-4 col-xl-3">
@@ -36,7 +36,7 @@ export const PokemonCard: React.FC<Props> = ({ pokemon }) => {
             {pokemon.types.map((type => (
               <button
                 type="button"
-                className="btn btn-outline-secondary me-3"
+                className="btn btn-outline-secondary me-3 pe-none"
                 key={type.url}
               >
                 {type.name}

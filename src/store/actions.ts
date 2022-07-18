@@ -32,81 +32,32 @@ export const SetSelectedPokemonAction = (payload: Pokemon | null): Action => ({
   payload,
 });
 
-// export const getFetchPokemonByURL = () => {
-//   return (dispatch: AppDispatch) => {
-//     return axios.get('https://pokeapi.co/api/v2/pokemon?limit=20&offset=0')
-//       .then(response => dispatch(SetPokemonsAction(response.data.results)));
-//   };
-// };
-
-// export const getFetchPokemonByURL = () => {
-//   return async (dispatch: AppDispatch) => {
-//     const allPokemonsFromServer = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=20&offset=0');
-//     const response = allPokemonsFromServer.data.results;
-//     const pokemonWithInfo: Pokemon[] = await Promise
-//       .all(response.map(async (pokemon: { url: string; name: string; }) => {
-//         const dataAboutCurrentPokemon = await axios.get(pokemon.url);
-//         const infoAboutCurrentPokemon = dataAboutCurrentPokemon.data;
-
-//         const undatePokemon: Pokemon = {
-//           name: pokemon.name,
-//           url: pokemon.url,
-//           photo: infoAboutCurrentPokemon.sprites.front_default,
-//           types: infoAboutCurrentPokemon.types.map((type: { type: Type; }) => ({
-//             name: type.type.name,
-//             url: type.type.url,
-//           })),
-//           info: {
-//             stats: infoAboutCurrentPokemon.stats,
-//             moves: infoAboutCurrentPokemon.moves,
-//           },
-//         };
-
-//         return undatePokemon;
-//       }));
-
-//     return dispatch(SetPokemonsAction(pokemonWithInfo));
-//   };
-// };
-
 export const getFetchPokemonByURL = (offset: number) => {
   return async (dispatch: AppDispatch) => {
-    const responseCountAllResults = await axios.get('https://pokeapi.co/api/v2/pokemon');
-    const CountAllResults = responseCountAllResults.data.count;
+    const allPokemonsFromServer = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`);
+    const response = allPokemonsFromServer.data.results;
+    const pokemonWithInfo: Pokemon[] = await Promise
+      .all(response.map(async (pokemon: { url: string; name: string; }) => {
+        const dataAboutCurrentPokemon = await axios.get(pokemon.url);
+        const infoAboutCurrentPokemon = dataAboutCurrentPokemon.data;
 
-    if (offset >= 0 && offset <= CountAllResults) {
-      const allPokemonsFromServer = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`);
-      const response = allPokemonsFromServer.data.results;
-      const pokemonWithInfo: Pokemon[] = await Promise
-        .all(response.map(async (pokemon: { url: string; name: string; }) => {
-          const dataAboutCurrentPokemon = await axios.get(pokemon.url);
-          const infoAboutCurrentPokemon = dataAboutCurrentPokemon.data;
+        const undatePokemon: Pokemon = {
+          name: pokemon.name,
+          url: pokemon.url,
+          photo: infoAboutCurrentPokemon.sprites.front_default,
+          types: infoAboutCurrentPokemon.types.map((type: { type: Type; }) => ({
+            name: type.type.name,
+            url: type.type.url,
+          })),
+          info: {
+            stats: infoAboutCurrentPokemon.stats,
+            moves: infoAboutCurrentPokemon.moves,
+          },
+        };
 
-          const undatePokemon: Pokemon = {
-            name: pokemon.name,
-            url: pokemon.url,
-            photo: infoAboutCurrentPokemon.sprites.front_default,
-            types: infoAboutCurrentPokemon.types.map((type: { type: Type; }) => ({
-              name: type.type.name,
-              url: type.type.url,
-            })),
-            info: {
-              stats: infoAboutCurrentPokemon.stats,
-              moves: infoAboutCurrentPokemon.moves,
-            },
-          };
+        return undatePokemon;
+      }));
 
-          return undatePokemon;
-        }));
-
-      dispatch(SetPokemonsAction(pokemonWithInfo));
-    }
+    dispatch(SetPokemonsAction(pokemonWithInfo));
   };
 };
-
-// export const getNextfetchPokemonByURL = (offset: number) => {
-//   return (dispatch: AppDispatch) => {
-//     return axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`)
-//       .then(response => dispatch(SetPokemonsAction(response.data.results)));
-//   };
-// };

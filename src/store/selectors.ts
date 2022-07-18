@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { State } from '../react-app-env';
 
-export const getSelectedPokemonSelector = (state: State) => state.selectedPokemon;
+export const getSelectedPokemon = (state: State) => state.selectedPokemon;
 
 export const getVisiblePokemons = (query: string, selectedType: string) => {
   return (state: State) => {

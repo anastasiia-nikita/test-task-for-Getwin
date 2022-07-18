@@ -1,10 +1,10 @@
 import React from 'react';
 import './PokemonInfo.scss';
 import { useSelector } from 'react-redux';
-import { getSelectedPokemonSelector } from '../../store/selectors';
+import { getSelectedPokemon } from '../../store/selectors';
 
 export const PokemonInfo: React.FC = () => {
-  const selectedPokemon = useSelector(getSelectedPokemonSelector);
+  const selectedPokemon = useSelector(getSelectedPokemon);
 
   return (
     <div className="container info">

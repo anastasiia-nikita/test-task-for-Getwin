@@ -33,4 +33,4 @@ export const store = createStore(reducer, applyMiddleware(thunkMiddleware));
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-export type TypedDispatch = ThunkDispatch<RootState, any, AnyAction>;
+export type TypedDispatch = ThunkDispatch<RootState, unknown, AnyAction>;
