@@ -5,8 +5,9 @@ import { PokemonList } from './components/PokemonList';
 export const App: React.FC = () => {
   return (
     <div className="App">
-
-      <PokemonList />
+      <main>
+        <PokemonList />
+      </main>
     </div>
   );
 };

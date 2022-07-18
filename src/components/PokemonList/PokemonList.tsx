@@ -77,7 +77,7 @@ export const PokemonList: React.FC = () => {
           <div className="text-center m-5">
             <button
               type="button"
-              className="btn btn-primary me-4"
+              className="btn btn-warning me-4"
               onClick={() => {
                 getPrevPokemons(offset);
               }}
@@ -87,7 +87,7 @@ export const PokemonList: React.FC = () => {
 
             <button
               type="button"
-              className="btn btn-warning"
+              className="btn btn-primary"
               onClick={() => {
                 getNextPokemons(offset);
               }}

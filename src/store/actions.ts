@@ -1,11 +1,8 @@
 import axios from 'axios';
 // eslint-disable-next-line import/no-cycle
 import { AppDispatch } from './index';
-// eslint-disable-next-line import/no-cycle
-// import { RootState, AppDispatch } from './index';
 // eslint-disable-next-line import/extensions, import/no-unresolved
 import { Pokemon, Type } from '../react-app-env';
-// import { AppDispatch } from './index';
 
 // eslint-disable-next-line no-shadow
 export enum ActionType {

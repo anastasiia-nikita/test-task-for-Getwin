@@ -1,4 +1,3 @@
-// import axios from 'axios';
 import { createStore, applyMiddleware, AnyAction } from 'redux';
 import thunkMiddleware, { ThunkDispatch } from 'redux-thunk';
 // eslint-disable-next-line import/extensions, import/no-unresolved
